@@ -141,7 +141,61 @@ static void BM_CountingSort(benchmark::State& state)
     state.SetComplexityN(state.range(0));
 }
 
-BENCHMARK(BM_CountingSort)->RangeMultiplier(2)->Range(1<<2, 1<<16)->Complexity();
+//BENCHMARK(BM_CountingSort)->RangeMultiplier(2)->Range(1<<2, 1<<16)->Complexity();
+
+static void BM_RadixSort(benchmark::State& state) 
+{
+    std::vector<int> v (state.range(0));
+    std::iota(v.begin(), v.end(), 0);
+    std::random_shuffle(v.begin(), v.end());
+
+    for (auto _ : state)
+    {
+        //current function under benchmarking
+        benchmark::DoNotOptimize(sorting::radix_sort(v));
+    }
+
+    state.SetComplexityN(state.range(0));
+}
+
+//BENCHMARK(BM_RadixSort)->RangeMultiplier(2)->Range(1<<2, 1<<16)->Complexity();
+
+static void BM_minMax(benchmark::State& state) 
+{
+    std::vector<int> v (state.range(0));
+    std::iota(v.begin(), v.end(), 0);
+    std::random_shuffle(v.begin(), v.end());
+    int min, max;
+
+    for (auto _ : state)
+    {
+        //current function under benchmarking
+        benchmark::DoNotOptimize(orderStatistics::minmax(v, min, max));
+    }
+
+    state.SetComplexityN(state.range(0));
+}
+
+//BENCHMARK(BM_minMax)->RangeMultiplier(2)->Range(1<<2, 1<<16)->Complexity();
+
+static void BM_randomSelect(benchmark::State& state) 
+{
+    std::vector<int> v (state.range(0));
+    std::iota(v.begin(), v.end(), 0);
+    //std::random_shuffle(v.begin(), v.end());
+
+    std::cout << orderStatistics::randSelect(v, 0, v.size(), 5) << ' ';
+
+    for (auto _ : state)
+    {
+        //current function under benchmarking
+        benchmark::DoNotOptimize(orderStatistics::randSelect(v, 0, v.size()-1, 5));
+    }
+
+    state.SetComplexityN(state.range(0));
+}
+
+BENCHMARK(BM_randomSelect)->RangeMultiplier(2)->Range(1<<3, 1<<20)->Complexity();
 
 //and call the main of the benchmark
 BENCHMARK_MAIN();

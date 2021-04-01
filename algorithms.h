@@ -1,5 +1,7 @@
 #include <iostream>
 #include <numeric>
+#include <random>
+#include <bits/stdc++.h> 
 
 //BINARY SEARCH
 static int binarySearch(std::vector<int> &v, int lower, int upper, int el)
@@ -280,6 +282,46 @@ static lld** Strassen(lld** a, lld** b, int n, int l, int m)
     return c; 
 } 
 
+namespace utility
+{
+    int randomNumber(int lower, int upper)
+    {
+        std::random_device dev;
+        std::mt19937 rng(dev());
+        std::uniform_int_distribution<std::mt19937::result_type> dist(lower, upper);
+
+        return dist(rng);
+    }
+
+    int randPartition(std::vector<int> &v, int p, int q)
+    {
+        int pivotIndex = p;
+        int startPivotPos = randomNumber(0, v.size()-1);
+        int pivot = v[startPivotPos];
+        int t;
+
+        //swap the pivot and the first pos
+        v[startPivotPos] = v[p];
+        v[p] = pivot;
+
+        for (auto j = p+1; j<q-1; ++j)
+        {
+            if ( v[j] <= pivot ) 
+            {
+                ++pivotIndex;
+                t = v[j];
+                v[j] = v[pivotIndex];
+                v[pivotIndex] = t;
+            }
+        }
+
+        v[p] = v[pivotIndex];
+        v[pivotIndex] = pivot;
+
+        return pivotIndex;
+    }
+}
+
 namespace sorting 
 {
     int insertionSort(std::vector<int> &v)
@@ -370,6 +412,7 @@ namespace sorting
         return 0;
     }
 
+    //compute k as the max number in the vector
     int counting_sort(std::vector<int> &a)
     {
         std::vector<int> b (a.size(), 0);
@@ -393,6 +436,29 @@ namespace sorting
         return 0;
     }
 
+    //for the radix sort 
+    int _counting_sort(std::vector<int> &a, int digitIndex)
+    {
+        std::vector<int> b (a.size(), 0);
+        //always 10 bc we consider one digit at the time
+        std::vector<int> c (10, 0); 
+        
+        for (auto i : a)
+            c[(i/digitIndex) % 10]+=1;
+
+        for (auto i = 1; i<10; ++i)
+            c[i] += c[i-1];
+
+        for (int i = b.size()-1; i>=0; --i)
+        {
+            b[c[(a[i]/digitIndex) % 10]-1] = a[i];
+            --c[(a[i]/digitIndex) % 10];
+        }
+
+        a = std::move(b);
+        return 0;
+    }
+
     int _numDigits(int number)
     {
         int digits = 0;
@@ -408,7 +474,98 @@ namespace sorting
     {
        int max = *std::max_element(v.begin(), v.end());
        int digitNum = _numDigits(max);
-        
+       int digitIndex = 1;
 
+       for (auto i = 1; i <= digitNum; ++i)
+       {
+            _counting_sort(v, digitIndex);        
+            digitIndex *= 10;
+       }
+
+       return 0;
     }
 }
+
+namespace orderStatistics
+{
+    int minimum(std::vector<int> &v)
+    {
+        int min = v[0];
+
+        for (auto el : v)
+            if (el < min) 
+                min = el;
+
+        return min;
+    }
+
+    int maximum(std::vector<int> &v)
+    {
+        int max = v[0];
+
+        for (auto el : v)
+            if (el > max) 
+                max = el;
+
+        return max;
+    }
+
+    int minmax(std::vector<int> &v, int& minOut, int& maxOut)
+    {
+        int min, max, i;
+
+        if (v.size() % 2 != 0)
+        {
+            min = v[0];
+            max = v[0];
+            i = 1;
+        }
+        else if ( v[0] > v[1] )
+        {
+            min = v[1];
+            max = v[0];
+            i = 2;
+        }else
+        {
+            min = v[0];
+            max = v[1];
+            i = 2;
+        }
+       
+        while ( i < v.size() )
+        {
+            if ( v[i] < v[i+1] )
+            {
+                if ( v[i] < min ) min = v[i];
+                if ( v[i+1] > max) max = v[i+1];
+            }
+            else
+            {
+                if ( v[i+1] < min ) min = v[i+1];
+                if ( v[i] > max) max = v[i];
+            }
+            
+            i+=2;
+        }
+       
+        minOut = min;
+        maxOut = max; 
+        return 0;
+    }
+
+    int randSelect(std::vector<int> v, int p, int q, int i)
+    {
+        if ( p == q ) return v[p];
+
+        int r = utility::randPartition(v, p, q);
+        int k = r - p + 1;
+        
+        if ( k == i ) return v[r];
+        
+        if ( i < k ) 
+            return randSelect(v, p, r-1, i);
+
+        return randSelect(v, r+1, q, i-k);
+    }
+}
+
