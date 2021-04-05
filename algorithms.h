@@ -296,7 +296,7 @@ namespace utility
     int randPartition(std::vector<int> &v, int p, int q)
     {
         int pivotIndex = p;
-        int startPivotPos = randomNumber(0, v.size()-1);
+        int startPivotPos = randomNumber(p, q);
         int pivot = v[startPivotPos];
         int t;
 
@@ -304,7 +304,30 @@ namespace utility
         v[startPivotPos] = v[p];
         v[p] = pivot;
 
-        for (auto j = p+1; j<q-1; ++j)
+        for (auto j = p+1; j<=q; ++j)
+        {
+            if ( v[j] <= pivot ) 
+            {
+                ++pivotIndex;
+                t = v[j];
+                v[j] = v[pivotIndex];
+                v[pivotIndex] = t;
+            }
+        }
+
+        v[p] = v[pivotIndex];
+        v[pivotIndex] = pivot;
+
+        return pivotIndex;
+    }
+
+    int partition(std::vector<int> &v, int p, int q)
+    {
+        int pivotIndex = p;
+        int pivot = v[p];
+        int t;
+
+        for (auto j = p+1; j<=q; ++j)
         {
             if ( v[j] <= pivot ) 
             {
@@ -343,6 +366,30 @@ namespace sorting
         }
 
         return 0;
+    }
+
+    int quicksort(std::vector<int> &v, int p, int q)
+    {
+       if ( p < q ) 
+       {
+            int r = utility::partition(v, p, q);
+            quicksort(v, p, r-1);
+            quicksort(v, r+1, q);
+       }
+        
+       return 0;
+    }
+
+    int randQuicksort(std::vector<int> &v, int p, int q)
+    {
+       if ( p < q ) 
+       {
+            int r = utility::randPartition(v, p, q);
+            quicksort(v, p, r-1);
+            quicksort(v, r+1, q);
+       }
+
+       return 0;
     }
     
     std::vector<int> _merge(std::vector<int> &v1, std::vector<int> &v2)
