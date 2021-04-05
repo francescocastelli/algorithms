@@ -221,9 +221,7 @@ static void BM_randomSelect(benchmark::State& state)
 {
     std::vector<int> v (state.range(0));
     std::iota(v.begin(), v.end(), 0);
-    //std::random_shuffle(v.begin(), v.end());
-
-    std::cout << orderStatistics::randSelect(v, 0, v.size(), 5) << ' ';
+    std::random_shuffle(v.begin(), v.end());
 
     for (auto _ : state)
     {
