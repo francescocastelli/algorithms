@@ -3,7 +3,7 @@
 #include <numeric>
 #include <bits/stdc++.h> 
 #include <benchmark/benchmark.h>
-#include "algorithms.h"
+#include "../include/algorithms.h"
 
 //BINARY SEARCH
 
