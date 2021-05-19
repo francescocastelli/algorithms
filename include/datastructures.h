@@ -1,6 +1,7 @@
 #include <random>
 #include <memory>
 #include <iostream>
+#include <iomanip>
 
 namespace datastruct 
 {
@@ -12,8 +13,7 @@ namespace datastruct
 			treapNode(int key, double prior) : key (key),
 											prior (prior),
 											leftChild(nullptr),
-											rightChild(nullptr)
-			{}
+											rightChild(nullptr) {}
 
 			int key;
 			double prior;
@@ -22,7 +22,6 @@ namespace datastruct
 		};
 
 		using nodePtr = std::unique_ptr<treapNode>;
-
 		
 	public:
 		RandomTreap() : root (nullptr) {}
@@ -35,12 +34,12 @@ namespace datastruct
 		void insert(int key)
 		{
 			//if (_search(root, key) == true) return;
-			_insertion(root, root, key);
+			_insertion(root, key);
 		}
 
 		void print()
 		{
-			_print(root);
+			_print("", root, false);
 		}
 
 	private:
@@ -69,62 +68,67 @@ namespace datastruct
 			return std::move(pivot);
 		}
 
-		void _insertion(nodePtr& root, nodePtr& parent, int key)
+		void _insertion(nodePtr& root, int key)
 		{
-			if(root == nullptr) 
+			nodePtr node = std::make_unique<treapNode>(key, _randomPrior());				
+
+			//for the first insertion
+			if (root == nullptr) {root=std::move(node); return;}
+
+			if(key > root->key) 
 			{
-				nodePtr node = std::make_unique<treapNode>(key, _randomPrior());				
+				//insert on the right (bst property)
+				_insertion(root->rightChild, key);
 
-				if (parent == nullptr) {parent=std::move(node); return;}
-
-				if(key > parent->key) 
-				{
-					parent->rightChild=std::move(node);
-					if (parent->prior > parent->rightChild->prior)
-						parent = _leftRotation(parent);
-
-					return;
-				}
-
-				parent->leftChild=std::move(node);
-				if (parent->prior > parent->leftChild->prior)
-					parent = _rightRotation(parent);
+				//restoring heap property
+				if (root->prior > root->rightChild->prior)
+					root = _leftRotation(root);
 
 				return;
 			}
 
-			if(key > root->key)
-				_insertion(root->rightChild, root, key);
-			else 
-				_insertion(root->leftChild, root, key);
+			//insert on the left(bst property)
+			_insertion(root->leftChild, key);
+
+			//restoring heap property
+			if (root->prior > root->leftChild->prior)
+				root = _rightRotation(root);
+
+			return;
 		}
 
-		bool _search(nodePtr& root, int key)
+		bool _search(const nodePtr& root, int key)
 		{
 			if(root == nullptr)
 				return false;
-			else if (root->key == key)
+			
+			if (root->key == key)
 				return true;
 
 			if(key > root->key)
 				_search(root->rightChild, key);
 			else
 				_search(root->leftChild, key);
+
+			return false;
 		}
 
-		void _print(nodePtr& root)
+		void _print(const std::string& prefix, const nodePtr& root, bool isLeft)
 		{
 			if(root == nullptr) return;
 
-			std::cout << "p: " << root.get() << "  key: " << root->key<< "  prior: " << root->prior << "  l: " << root->leftChild.get() << "  r: " << root->rightChild.get() << '\n';
+			std::cout << prefix;
 
-			_print(root->rightChild);
-			_print(root->leftChild);
+			std::cout << (isLeft ? "├──" : "└──");
+
+			//value of the node
+			std::cout << std::setprecision(2);
+			std::cout << "("<< root->key << " - " << root->prior << ")"<< std::endl;
+
+			_print(prefix + (isLeft ? "|            " : "            "), root->leftChild, true);
+			_print(prefix + (isLeft ? "|            " : "            "), root->rightChild, false);
 		}
 		
 		nodePtr root;
 	};
 }
-
-
-
