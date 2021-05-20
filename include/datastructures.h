@@ -7,6 +7,21 @@ namespace datastruct
 {
 	class RandomTreap
 	{
+		/* RandomTreaps are binary trees with two property:
+		 * 		1. symmetric prop for the keys
+		 * 		2. heap prop for the priorities
+		 *
+		 * 	so it's a bst wrt to the keys and nodes are also 
+		 * 	ordered based on the priority values 
+		 * 	( if x = parent(y) -> prior(x) < prior(y) )
+		 *
+		 * 	priorities are used to keep the tree balanced, 
+		 * 	and so to reach complexity for the various operation
+		 * 	in the O(logn). This is done by sampling priorities at
+		 * 	random at every insertion, based on the fact that 
+		 * 	inserting at random n element a bst will give an expected
+		 * 	depth of 1.39*logn.
+		 */
 	private:
 		struct treapNode 
 		{
@@ -26,15 +41,33 @@ namespace datastruct
 	public:
 		RandomTreap() : root (nullptr) {}
 
+		/* The running time is O(logn) since it 
+		 * depends on the lenght of the longest path
+		 * to the leafs, and we know that the expected
+		 * depth should be O(logn).
+		 */
 		bool search(int key)
 		{
 			return _search(root, key);
 		}
 
+		/* Lemma: the expected number of rotations when inserting
+		 * an element is 2. The complexity of insertion is O(logn)
+		 *
+		 * # of rotations = depth of x after being inserted as leaf +
+		 * 					- depth of x after the rotations
+		 */
 		void insert(int key)
 		{
-			//if (_search(root, key) == true) return;
 			_insertion(root, key);
+		}
+
+		/* Also here we use the lemma of before, expected number of
+		 * rotations is 2. Complexity of remove operation is O(logn)
+		 */
+		void remove(int key)
+		{
+			_remove(root, key);		
 		}
 
 		void print()
@@ -75,7 +108,7 @@ namespace datastruct
 			//for the first insertion
 			if (root == nullptr) {root=std::move(node); return;}
 
-			if(key > root->key) 
+			if (key > root->key) 
 			{
 				//insert on the right (bst property)
 				_insertion(root->rightChild, key);
@@ -95,6 +128,35 @@ namespace datastruct
 				root = _rightRotation(root);
 
 			return;
+		}
+
+		void _remove(nodePtr& root, int key)
+		{
+			if (root == nullptr) return;
+			
+			//navigate the tree until key is found
+			if (key > root->key) 
+				_remove(root->rightChild, key);
+			else
+				_remove(root->leftChild, key);
+
+			if (key == root->key) 
+			{
+				if (!root->leftChild) {root = std::move(root->rightChild); return;}
+				if (!root->rightChild) {root = std::move(root->leftChild); return;}
+
+				//move the root to the leafs and then remove it
+				if (root->leftChild->prior < root->rightChild->prior)
+				{
+					root = _rightRotation(root);
+					_remove(root->rightChild, key);
+				}
+				else 
+				{
+						root = _leftRotation(root);
+						_remove(root->leftChild, key);	
+				}
+			}
 		}
 
 		bool _search(const nodePtr& root, int key)

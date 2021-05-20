@@ -10,4 +10,16 @@ int main()
 
 	treap.print();
 	std::cout << int(treap.search(15));
+	treap.remove(10);
+	treap.print();
+	treap.remove(10);
+	treap.print();
+	treap.remove(2);
+	treap.print();
+	treap.remove(13);
+	treap.print();
+	treap.remove(1);
+	treap.print();
+	treap.remove(14);
+	treap.print();
 }
