@@ -76,12 +76,12 @@ namespace datastruct
 		}
 
 	private:
-    	double _randomPrior()
-    	{
-			static std::default_random_engine e;
+    double _randomPrior()
+    {
+			  static std::default_random_engine e;
     		static std::uniform_real_distribution<double> dis(0.0, 1.0); 
     		return dis(e);
-    	}
+    }
 
 		nodePtr _rightRotation(nodePtr& root)
 		{
@@ -193,4 +193,5 @@ namespace datastruct
 		
 		nodePtr root;
 	};
+
 }
