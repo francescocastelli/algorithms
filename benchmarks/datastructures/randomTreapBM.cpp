@@ -3,7 +3,7 @@
 #include <numeric>
 #include <bits/stdc++.h> 
 #include <benchmark/benchmark.h>
-#include "../include/datastructures.h"
+#include "datastructures.h"
 
 static void BM_RandomTreapInsertion(benchmark::State& state) 
 {
@@ -12,13 +12,13 @@ static void BM_RandomTreapInsertion(benchmark::State& state)
     std::vector<int> v (state.range(0));
     std::iota(v.begin(), v.end(), 0);
     std::random_shuffle(v.begin(), v.end());
-	int i = 0;
+	  int i = 0;
 
     for (auto _ : state)
     {
         //current function under benchmarking
-		benchmark::DoNotOptimize(treap.insert(i));
-		++i;
+		    treap.insert(i);
+		    ++i;
     }
 
     state.SetComplexityN(state.range(0));
@@ -37,13 +37,13 @@ static void BM_RandomTreapSearch(benchmark::State& state)
     std::iota(v.begin(), v.end(), 0);
     std::random_shuffle(v.begin(), v.end());
 
-	for (int i = 0; i<v.size(); ++i)
-		treap.insert(v[i]);
+    for (int i = 0; i<v.size(); ++i)
+        treap.insert(v[i]);
 
     for (auto _ : state)
     {
         //current function under benchmarking
-		treap.search(3);
+		    treap.search(3);
     }
 
     state.SetComplexityN(state.range(0));
