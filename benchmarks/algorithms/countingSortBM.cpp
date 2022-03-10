@@ -19,6 +19,7 @@ static void BM_CountingSort(benchmark::State& state)
     state.SetComplexityN(state.range(0));
 }
 
-BENCHMARK(BM_CountingSort)->RangeMultiplier(2)->Range(1<<2, 1<<16)->Complexity();
+BENCHMARK(BM_CountingSort)->RangeMultiplier(2)->Range(1<<2, 1<<16)
+                          ->Complexity(benchmark::oN);
 
 BENCHMARK_MAIN();
