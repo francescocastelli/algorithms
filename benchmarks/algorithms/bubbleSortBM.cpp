@@ -12,12 +12,11 @@ static void BM_bubble_sort(benchmark::State& state)
 
     for (auto _ : state)
     {
-        //current function under benchmarking
         benchmark::DoNotOptimize(sorting::bubbleSort(v));
     }
     state.SetComplexityN(state.range(0));
 }
 
-BENCHMARK(BM_bubble_sort)->RangeMultiplier(2)->Range(1<<5, 1<<20)->Complexity(benchmark::oN);
+BENCHMARK(BM_bubble_sort)->RangeMultiplier(2)->Range(1<<5, 1<<16)->Complexity(benchmark::oNSquared);
 
 BENCHMARK_MAIN();
