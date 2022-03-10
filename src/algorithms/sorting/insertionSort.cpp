@@ -4,14 +4,12 @@ namespace sorting
 {
 int insertionSort(std::vector<int> &v)
 {
-    int i, j, key, n = v.size();
-
-    for ( j = 1; j<n; j++)
+    for (int j = 1; j < v.size(); j++)
     {
-        key = v[j];
-        i = j-1;
+        auto key = v[j];
+        auto i = j-1;
 
-        while ( i > 0 && v[i] > key ) 
+        while ( i >= 0 && v[i] > key ) 
         {   
             v[i+1] = v[i];
             i-=1;
