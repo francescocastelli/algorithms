@@ -1,9 +1,8 @@
-//g++ test.cpp -std=c++11 -isystem benchmark/include -Lbenchmark/build/src -lbenchmark -lpthread -o benchmark_res
 #include <iostream>
 #include <numeric>
 #include <bits/stdc++.h> 
 #include <benchmark/benchmark.h>
-#include "datastructures.h"
+#include "randomTreap.h"
 
 static void BM_RandomTreapInsertion(benchmark::State& state) 
 {
@@ -53,5 +52,6 @@ BENCHMARK(BM_RandomTreapSearch)
 	->RangeMultiplier(2)
 	->Range(1<<5, 1<<18)
 	->Complexity(benchmark::oLogN);
+
 //and call the main of the benchmark
 BENCHMARK_MAIN();
