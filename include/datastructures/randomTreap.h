@@ -56,7 +56,7 @@ public:
 			_print("", root, false);
 		}
 
-	private:
+private:
 		struct treapNode 
 		{
 			treapNode(int key, double prior) : key (key),
