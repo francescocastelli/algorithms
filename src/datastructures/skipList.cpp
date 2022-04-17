@@ -1,13 +1,11 @@
 #include "skipList.h"
 
-
 namespace datastruct 
 {
 
-// TODO
 int SkipList::_pickLevel()
 {
-    return 10;
+    return dist(gen);
 }
 
 SkipList::ListNode* SkipList::_makeNode(int key)
