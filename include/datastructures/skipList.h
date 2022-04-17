@@ -1,5 +1,6 @@
 #include <memory>
 #include <vector>
+#include <random>
 
 namespace datastruct 
 {
@@ -7,7 +8,11 @@ namespace datastruct
 class SkipList 
 {
 public:
-    SkipList() : head (nullptr) {}
+    SkipList() : head (nullptr), 
+                 rd (),
+                 gen (rd()), 
+                 dist (_prob)
+    {}
 
     void insert(int key);
 
@@ -36,6 +41,11 @@ private:
     int _pickLevel();
 
     ListNode* head;
+
+    static constexpr auto _prob = 0.5;
+    std::random_device rd;
+    std::mt19937 gen;
+    std::geometric_distribution<> dist;
 };
 
 } // namespace datastruct
