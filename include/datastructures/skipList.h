@@ -14,14 +14,17 @@ public:
                  dist (_prob)
     {}
 
+    ~SkipList();
+
+    bool search(int key);
     void insert(int key);
+    void print();
 
 private:
     struct ListNode 
     {
         ListNode(int key, int levels) : key (key),
-                                       maxLevel (levels),
-                                       nexts (levels, nullptr)
+                                        nexts (levels+1, nullptr)
         {}
 
         ListNode(const ListNode&) = delete;
@@ -32,8 +35,9 @@ private:
 
         ~ListNode() = default;
 
+        int maxLevel() { return nexts.size() - 1; }
+
         int key;
-        int maxLevel;
         std::vector<ListNode*> nexts;
     };
 
