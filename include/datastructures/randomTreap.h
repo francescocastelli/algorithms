@@ -1,4 +1,5 @@
 #include <memory>
+#include <random>
 
 namespace datastruct 
 {
@@ -20,7 +21,11 @@ class RandomTreap
 * 	depth of 1.39*logn.
 */
 public:
-    RandomTreap() : root (nullptr) {}
+    RandomTreap() : root (nullptr), 
+                    rd (),
+                    gen (rd()),
+                    dist (high_dist, low_dist)
+    {}
 
 		/* The running time is O(logn) since it 
 		 * depends on the lenght of the longest path
@@ -69,6 +74,11 @@ private:
 			std::unique_ptr<treapNode> leftChild; 
 			std::unique_ptr<treapNode> rightChild; 
 		};
+
+    std::random_device rd;
+    std::mt19937 gen;
+    std::uniform_real_distribution<double> dist; 
+    static constexpr auto low_dist = 0.0, high_dist = 1.0;
 
 		using nodePtr = std::unique_ptr<treapNode>;
 		nodePtr root;

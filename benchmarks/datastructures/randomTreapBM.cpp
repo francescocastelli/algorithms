@@ -16,7 +16,7 @@ static void BM_RandomTreapInsertion(benchmark::State& state)
     for (auto _ : state)
     {
         //current function under benchmarking
-		    treap.insert(i);
+		    treap.insert(v[i%v.size()]);
 		    ++i;
     }
 
@@ -39,10 +39,12 @@ static void BM_RandomTreapSearch(benchmark::State& state)
     for (int i = 0; i<v.size(); ++i)
         treap.insert(v[i]);
 
+    auto i = 0;
     for (auto _ : state)
     {
         //current function under benchmarking
-		    treap.search(3);
+		    treap.search(v[i%v.size()]);
+        ++i;
     }
 
     state.SetComplexityN(state.range(0));

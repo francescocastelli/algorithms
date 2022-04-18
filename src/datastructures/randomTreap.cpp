@@ -1,17 +1,13 @@
 #include "randomTreap.h"
 #include <iostream>
 #include <iomanip>
-#include <memory>
-#include <random>
 
 namespace datastruct
 {
 
 double RandomTreap::_randomPrior()
 {
-    static std::default_random_engine e;
-    static std::uniform_real_distribution<double> dis(0.0, 1.0); 
-    return dis(e);
+    return dist(gen);
 }
 
 RandomTreap::nodePtr RandomTreap::_rightRotation(RandomTreap::nodePtr& root)
