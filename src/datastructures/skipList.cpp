@@ -9,7 +9,7 @@ SkipList::~SkipList()
     auto* curr = head;
     while (curr)
     {
-        auto* next = curr->nexts[0];
+        auto* next = curr->getNext(0);
         delete curr;
         curr = next;
     }
@@ -38,10 +38,10 @@ bool SkipList::search(const int key) const
     for (auto i = headLevel; i >= 0; --i)
     {
         // move horizontally through list
-        while (curr->nexts[i] && key > curr->nexts[i]->key)
-           curr = curr->nexts[i];
+        while (curr->getNext(i) && key > curr->getNext(i)->key)
+           curr = curr->getNext(i);
 
-        if (curr->nexts[i] && curr->nexts[i]->key == key)
+        if (curr->getNext(i) && curr->getNext(i)->key == key)
             return true;
     }
 
@@ -65,10 +65,10 @@ void SkipList::insert(const int key)
     if (key < head->key)
     {
         if (newLevel < headLevel)
-            newNode->nexts.resize(headLevel + 1, nullptr);
+            newNode->resize(headLevel);
 
         for (auto i = headLevel; i>=0; --i)
-            newNode->nexts[i] = head;
+            newNode->setNext(head, i);
         
         head = newNode;
         return;
@@ -76,20 +76,20 @@ void SkipList::insert(const int key)
 
     // resize the head next vector to handle new levels
     if (headLevel < newLevel)
-        head->nexts.resize(newLevel + 1, nullptr);
+        head->resize(newLevel);
 
     auto* curr = head;
     for (auto i = headLevel; i >= 0; --i)
     {
         // move horizontally through list
-        while (curr->nexts[i] && key > curr->nexts[i]->key)
-           curr = curr->nexts[i];
+        while (curr->getNext(i) && key > curr->getNext(i)->key)
+           curr = curr->getNext(i);
 
         // insert newNode in curr level
         if (newLevel >= i)
         {
-            newNode->nexts[i] = curr->nexts[i];
-            curr->nexts[i] = newNode;
+            newNode->setNext(curr->getNext(i), i);
+            curr->setNext(newNode, i);
         }
     }
 }
