@@ -9,16 +9,15 @@ class SkipList
 {
 public:
     SkipList() : head (nullptr), 
-                 rd (),
                  gen (rd()), 
                  dist (_prob)
     {}
 
     ~SkipList();
 
-    bool search(int key);
-    void insert(int key);
-    void print();
+    bool search(const int key) const;
+    void insert(const int key);
+    void print() const;
 
 private:
     struct ListNode 
@@ -41,12 +40,16 @@ private:
         std::vector<ListNode*> nexts;
     };
 
-    ListNode* _makeNode(int key);
+    using ListNodePtr = ListNode*;
+
+    ListNodePtr _makeNode(const int key);
     int _pickLevel();
 
-    ListNode* head;
+    // head points always to max level
+    ListNodePtr head;
 
-    static constexpr auto _prob = 0.5;
+    // random utils
+    static constexpr auto _prob = 0.6;
     std::random_device rd;
     std::mt19937 gen;
     std::geometric_distribution<> dist;

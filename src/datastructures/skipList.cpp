@@ -15,17 +15,17 @@ SkipList::~SkipList()
     }
 }
 
-int SkipList::_pickLevel()
+inline int SkipList::_pickLevel() 
 {
     return dist(gen);
 }
 
-SkipList::ListNode* SkipList::_makeNode(int key)
+inline SkipList::ListNode* SkipList::_makeNode(const int key) 
 {
     return new ListNode(key, _pickLevel()); 
 }
 
-bool SkipList::search(int key)
+bool SkipList::search(const int key) const
 {
     if (!head)
         return false;
@@ -48,7 +48,7 @@ bool SkipList::search(int key)
     return false;
 }
 
-void SkipList::insert(int key)
+void SkipList::insert(const int key)
 {
     auto* newNode = _makeNode(key);
 
@@ -94,7 +94,7 @@ void SkipList::insert(int key)
     }
 }
 
-void SkipList::print()
+void SkipList::print() const
 {
     if (!head)
     {
